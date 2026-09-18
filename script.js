@@ -15,6 +15,7 @@
   const yesBtn = document.getElementById("yesBtn");
   const noBtn = document.getElementById("noBtn");
   const noPlaceholder = document.getElementById("noPlaceholder");
+  const thanksNote = document.getElementById("thanksNote");
   const mapLink = document.getElementById("mapLink");
   const liveRegion = document.getElementById("liveRegion");
   const canvas = document.getElementById("fx");
@@ -108,8 +109,15 @@
     "Il NO non esiste qui 💍", "Solo il SÌ è un'opzione ❤️"
   ];
 
+  /* After this moment the NO button retires: only the yes is left, plus a
+     thank-you. Local time of the device, so 12:00 as she reads it. */
+  const THANKS_AT = new Date(2026, 8, 19, 12, 0, 0);
+  const THANKS_HEADING = "Grazie. Davvero. \u2764\ufe0f\ud83c\udf63";
+  const MAX_TIMEOUT = 2147483647;
+
   let msgIndex = 0;
   let dodgeCount = 0;
+  let noRetired = false;
   let lastDodgeTime = 0;
   let hasPlacedInitial = false;
   let answered = false;
@@ -234,17 +242,41 @@
     hasPlacedInitial = true;
   }
 
-  if (MOTION_OK) {
-    let placed = false;
-    const finalizePlacement = () => {
-      if (placed) return;
-      placed = true;
+  function retireNo() {
+    if (noRetired) return;
+    noRetired = true;
+    noBtn.hidden = true;
+    noBtn.classList.remove("is-ready");
+    noPlaceholder.hidden = true;
+    thanksNote.hidden = false;
+    confirmHeading.textContent = THANKS_HEADING;
+  }
+
+  /* True when the NO is already gone; otherwise it retires on its own if the
+     page happens to be open when the deadline passes. */
+  function checkDeadline() {
+    const remaining = THANKS_AT.getTime() - Date.now();
+    if (remaining <= 0) {
+      retireNo();
+      return true;
+    }
+    if (remaining < MAX_TIMEOUT) setTimeout(retireNo, remaining);
+    return false;
+  }
+
+  if (!checkDeadline()) {
+    if (MOTION_OK) {
+      let placed = false;
+      const finalizePlacement = () => {
+        if (placed) return;
+        placed = true;
+        placeInitial();
+      };
+      inviteCard.addEventListener("animationend", finalizePlacement, { once: true });
+      setTimeout(finalizePlacement, 1000);
+    } else {
       placeInitial();
-    };
-    inviteCard.addEventListener("animationend", finalizePlacement, { once: true });
-    setTimeout(finalizePlacement, 1000);
-  } else {
-    placeInitial();
+    }
   }
 
   function isOverYes(x, y) {
@@ -253,7 +285,7 @@
   }
 
   document.addEventListener("mousemove", (e) => {
-    if (!hasPlacedInitial || answered) return;
+    if (!hasPlacedInitial || answered || noRetired) return;
     if (isOverYes(e.clientX, e.clientY)) return;
     const rect = noBtn.getBoundingClientRect();
     const inZone =
@@ -267,7 +299,7 @@
   document.addEventListener(
     "touchmove",
     (e) => {
-      if (!hasPlacedInitial || answered) return;
+      if (!hasPlacedInitial || answered || noRetired) return;
       const t = e.touches[0];
       if (!t) return;
       if (isOverYes(t.clientX, t.clientY)) return;
@@ -287,7 +319,7 @@
     noBtn.addEventListener(
       evt,
       (e) => {
-        if (answered) return;
+        if (answered || noRetired) return;
         e.preventDefault();
         const point = e.touches
           ? { x: e.touches[0].clientX, y: e.touches[0].clientY }
@@ -300,12 +332,12 @@
 
   noBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    if (answered) return;
+    if (answered || noRetired) return;
     dodge();
   });
 
   function keepInView() {
-    if (answered || !hasPlacedInitial) return;
+    if (answered || noRetired || !hasPlacedInitial) return;
     if (dodgeCount === 0) {
       placeInitial();
       return;

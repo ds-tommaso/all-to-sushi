@@ -250,6 +250,17 @@ img { max-width: 100%; }
   font-size: clamp(1.25rem, 4.4vw, 1.55rem);
 }
 
+.thanks {
+  margin: -10px 0 22px;
+  color: var(--text-muted);
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.thanks strong {
+  color: var(--accent-gold);
+}
+
 .subtitle-confirm {
   margin: 0 0 22px;
   color: var(--text-muted);
