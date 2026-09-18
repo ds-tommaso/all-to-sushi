@@ -214,8 +214,14 @@
     placeInitial();
   }
 
+  function isOverYes(x, y) {
+    const yesRect = yesBtn.getBoundingClientRect();
+    return x >= yesRect.left && x <= yesRect.right && y >= yesRect.top && y <= yesRect.bottom;
+  }
+
   document.addEventListener("mousemove", (e) => {
     if (!hasPlacedInitial || answered) return;
+    if (isOverYes(e.clientX, e.clientY)) return;
     const rect = noBtn.getBoundingClientRect();
     const inZone =
       e.clientX >= rect.left - APPROACH_THRESHOLD &&
@@ -231,6 +237,7 @@
       if (!hasPlacedInitial || answered) return;
       const t = e.touches[0];
       if (!t) return;
+      if (isOverYes(t.clientX, t.clientY)) return;
       const rect = noBtn.getBoundingClientRect();
       const pad = 60;
       const inZone =
