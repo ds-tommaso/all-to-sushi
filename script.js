@@ -116,13 +116,37 @@
   const DODGE_COOLDOWN = 240;
   const APPROACH_THRESHOLD = 85;
 
-  function getBounds() {
+  function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+  }
+
+  function safeInset(name) {
+    const raw = getComputedStyle(document.documentElement).getPropertyValue(name);
+    const n = parseFloat(raw);
+    return Number.isFinite(n) ? n : 0;
+  }
+
+  /* Visible area in client coordinates (what `position: fixed` uses). */
+  function getViewport() {
+    const vv = window.visualViewport;
+    if (!vv) {
+      return { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
+    }
+    return { left: vv.offsetLeft, top: vv.offsetTop, width: vv.width, height: vv.height };
+  }
+
+  function getBounds(w, h) {
     const margin = 14;
+    const vp = getViewport();
+    const btnW = w || noBtn.offsetWidth;
+    const btnH = h || noBtn.offsetHeight;
+    const minX = vp.left + margin + safeInset("--sai-left");
+    const minY = vp.top + margin + safeInset("--sai-top");
     return {
-      minX: margin,
-      minY: margin,
-      maxX: Math.max(margin, window.innerWidth - noBtn.offsetWidth - margin),
-      maxY: Math.max(margin, window.innerHeight - noBtn.offsetHeight - margin - 12)
+      minX,
+      minY,
+      maxX: Math.max(minX, vp.left + vp.width - btnW - margin - safeInset("--sai-right")),
+      maxY: Math.max(minY, vp.top + vp.height - btnH - margin - 12 - safeInset("--sai-bottom"))
     };
   }
 
@@ -175,13 +199,21 @@
     if (now - lastDodgeTime < DODGE_COOLDOWN) return;
     lastDodgeTime = now;
 
+    /* The initial placement locks the placeholder's size: release it so the
+       longer messages size the pill instead of overflowing it. */
+    if (noBtn.style.width) {
+      noBtn.style.width = "";
+      noBtn.style.height = "";
+    }
+
+    msgIndex = (msgIndex + 1) % NO_MESSAGES.length;
+    noBtn.textContent = NO_MESSAGES[msgIndex];
+
     const pos = pickNewPosition(avoidPoint);
     noBtn.style.left = pos.x + "px";
     noBtn.style.top = pos.y + "px";
 
     dodgeCount++;
-    msgIndex = (msgIndex + 1) % NO_MESSAGES.length;
-    noBtn.textContent = NO_MESSAGES[msgIndex];
 
     noBtn.classList.remove("is-wiggling");
     void noBtn.offsetWidth;
@@ -190,11 +222,12 @@
 
   function placeInitial() {
     const rect = noPlaceholder.getBoundingClientRect();
+    const bounds = getBounds(rect.width, rect.height);
     noBtn.style.transition = "none";
     noBtn.style.width = rect.width + "px";
     noBtn.style.height = rect.height + "px";
-    noBtn.style.left = rect.left + "px";
-    noBtn.style.top = rect.top + "px";
+    noBtn.style.left = clamp(rect.left, bounds.minX, bounds.maxX) + "px";
+    noBtn.style.top = clamp(rect.top, bounds.minY, bounds.maxY) + "px";
     void noBtn.offsetWidth;
     noBtn.style.transition = "";
     noBtn.classList.add("is-ready");
@@ -271,8 +304,8 @@
     dodge();
   });
 
-  window.addEventListener("resize", () => {
-    if (answered) return;
+  function keepInView() {
+    if (answered || !hasPlacedInitial) return;
     if (dodgeCount === 0) {
       placeInitial();
       return;
@@ -280,9 +313,17 @@
     const bounds = getBounds();
     const curLeft = parseFloat(noBtn.style.left) || 0;
     const curTop = parseFloat(noBtn.style.top) || 0;
-    noBtn.style.left = Math.min(Math.max(curLeft, bounds.minX), bounds.maxX) + "px";
-    noBtn.style.top = Math.min(Math.max(curTop, bounds.minY), bounds.maxY) + "px";
-  });
+    noBtn.style.left = clamp(curLeft, bounds.minX, bounds.maxX) + "px";
+    noBtn.style.top = clamp(curTop, bounds.minY, bounds.maxY) + "px";
+  }
+
+  window.addEventListener("resize", keepInView);
+  window.addEventListener("orientationchange", keepInView);
+  window.addEventListener("scroll", keepInView, { passive: true });
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", keepInView);
+    window.visualViewport.addEventListener("scroll", keepInView);
+  }
 
   /* ---------------- Confetti / hearts burst ---------------- */
 
