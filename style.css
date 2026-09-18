@@ -411,6 +411,21 @@ img { max-width: 100%; }
   filter: brightness(1.05);
 }
 
+.btn-wa {
+  display: inline-flex;
+  width: 100%;
+  margin-top: 10px;
+  color: #05271a;
+  background: linear-gradient(135deg, #3ddc84, #1fa855);
+  box-shadow: 0 12px 26px rgba(37, 211, 102, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  text-decoration: none;
+}
+
+.btn-wa:hover {
+  transform: translateY(-2px) scale(1.02);
+  filter: brightness(1.08);
+}
+
 .site-link {
   display: inline-block;
   margin-top: 14px;
