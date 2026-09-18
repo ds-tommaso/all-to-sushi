@@ -205,6 +205,7 @@ img { max-width: 100%; }
 #inviteCard > *:nth-child(6) { animation-delay: 0.78s; }
 #inviteCard > *:nth-child(7) { animation-delay: 0.86s; }
 #inviteCard > *:nth-child(8) { animation-delay: 0.96s; }
+#inviteCard > *:nth-child(9) { animation-delay: 1.06s; }
 
 @keyframes revealUp {
   from { opacity: 0; transform: translateY(14px); }
@@ -306,6 +307,26 @@ img { max-width: 100%; }
   margin-top: 4px;
   font-style: italic;
   opacity: 0.85;
+}
+
+.wa-invite {
+  margin: 18px 0 0;
+}
+
+.wa-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #6fe6a4;
+  font-size: 0.92rem;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.wa-link:hover {
+  color: #a6f3c9;
+  border-color: currentColor;
 }
 
 .signature {
@@ -537,13 +558,17 @@ img { max-width: 100%; }
 }
 
 @media (max-height: 560px) {
-  .stage { padding: 12px 16px; }
-  .card { padding: 18px clamp(18px, 4vw, 30px); }
-  .title { font-size: clamp(1.25rem, 4vw, 1.6rem); }
-  .emoji-row { margin: 2px 0 8px; font-size: 1.35rem; }
-  .details .time { font-size: 0.98rem; }
-  .question { margin: 10px 0 14px; font-size: clamp(1.1rem, 3.2vw, 1.3rem); }
-  .btn { min-height: 46px; padding: 11px 22px; }
+  .stage { padding: 8px 16px; }
+  .card { padding: 14px clamp(16px, 4vw, 28px); }
+  .eyebrow { margin-bottom: 6px; }
+  .title { font-size: clamp(1.15rem, 3.4vw, 1.45rem); }
+  .emoji-row { margin: 2px 0 6px; font-size: 1.2rem; }
+  .details .time { font-size: 0.95rem; }
+  .details .line, .details .line-soft { font-size: 0.92rem; }
+  .question { margin: 8px 0 12px; font-size: clamp(1.05rem, 3vw, 1.2rem); }
+  .btn { min-height: 44px; padding: 10px 20px; }
+  .wa-invite { margin-top: 10px; }
+  .signature { margin-top: 6px; font-size: 1.05rem; }
 }
 
 @media (min-width: 1024px) {

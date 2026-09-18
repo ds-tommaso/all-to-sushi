@@ -15,6 +15,7 @@
   const confirmHeading = document.getElementById("confirmHeading");
   const actions = document.getElementById("actions");
   const yesBtn = document.getElementById("yesBtn");
+  const waInvite = document.getElementById("waInvite");
   const noBtn = document.getElementById("noBtn");
   const noPlaceholder = document.getElementById("noPlaceholder");
   const thanksNote = document.getElementById("thanksNote");
@@ -190,9 +191,15 @@
     );
   }
 
+  /* Places the NO must never cover: they are the two things she may want
+     to tap. */
+  function keepClearOf() {
+    return [yesBtn.getBoundingClientRect(), waInvite.getBoundingClientRect()];
+  }
+
   function pickNewPosition(avoidPoint) {
     const bounds = getBounds();
-    const yesRect = yesBtn.getBoundingClientRect();
+    const blocked = keepClearOf();
     const w = noBtn.offsetWidth;
     const h = noBtn.offsetHeight;
     let best = null;
@@ -202,7 +209,7 @@
       const x = bounds.minX + Math.random() * (bounds.maxX - bounds.minX);
       const y = bounds.minY + Math.random() * (bounds.maxY - bounds.minY);
       const candidate = { left: x, top: y, right: x + w, bottom: y + h };
-      if (rectsOverlap(candidate, yesRect, 16)) continue;
+      if (blocked.some((rect) => rectsOverlap(candidate, rect, 16))) continue;
 
       let score = Math.random();
       if (avoidPoint) {
@@ -317,14 +324,15 @@
     }
   }
 
-  function isOverYes(x, y) {
-    const yesRect = yesBtn.getBoundingClientRect();
-    return x >= yesRect.left && x <= yesRect.right && y >= yesRect.top && y <= yesRect.bottom;
+  function isOverSafeZone(x, y) {
+    return keepClearOf().some(
+      (r) => x >= r.left && x <= r.right && y >= r.top && y <= r.bottom
+    );
   }
 
   document.addEventListener("mousemove", (e) => {
     if (!hasPlacedInitial || answered || noRetired) return;
-    if (isOverYes(e.clientX, e.clientY)) return;
+    if (isOverSafeZone(e.clientX, e.clientY)) return;
     const rect = noBtn.getBoundingClientRect();
     const inZone =
       e.clientX >= rect.left - APPROACH_THRESHOLD &&
@@ -340,7 +348,7 @@
       if (!hasPlacedInitial || answered || noRetired) return;
       const t = e.touches[0];
       if (!t) return;
-      if (isOverYes(t.clientX, t.clientY)) return;
+      if (isOverSafeZone(t.clientX, t.clientY)) return;
       const rect = noBtn.getBoundingClientRect();
       const pad = 60;
       const inZone =
