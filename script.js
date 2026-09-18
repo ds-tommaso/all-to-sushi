@@ -8,14 +8,17 @@
   const layerGlow = document.getElementById("layerGlow");
   const layerStars = document.getElementById("layerStars");
   const layerDeco = document.getElementById("layerDeco");
+  const layerHearts = document.getElementById("layerHearts");
 
   const inviteCard = document.getElementById("inviteCard");
   const confirmCard = document.getElementById("confirmCard");
   const confirmHeading = document.getElementById("confirmHeading");
+  const actions = document.getElementById("actions");
   const yesBtn = document.getElementById("yesBtn");
   const noBtn = document.getElementById("noBtn");
   const noPlaceholder = document.getElementById("noPlaceholder");
   const thanksNote = document.getElementById("thanksNote");
+  const countdown = document.getElementById("countdown");
   const mapLink = document.getElementById("mapLink");
   const liveRegion = document.getElementById("liveRegion");
   const canvas = document.getElementById("fx");
@@ -61,8 +64,27 @@
     layerDeco.appendChild(frag);
   }
 
+  function createHearts() {
+    const shapes = ["\u2764\ufe0f", "\ud83d\udc95", "\ud83d\udc97", "\ud83d\udc96"];
+    const count = window.innerWidth < 600 ? 7 : 12;
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < count; i++) {
+      const el = document.createElement("span");
+      el.className = "float-heart";
+      el.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+      el.style.left = 3 + Math.random() * 92 + "%";
+      el.style.setProperty("--size", (14 + Math.random() * 20).toFixed(0) + "px");
+      el.style.setProperty("--dur", (14 + Math.random() * 12).toFixed(2) + "s");
+      el.style.setProperty("--delay", (Math.random() * 16).toFixed(2) + "s");
+      el.style.setProperty("--peak", (0.3 + Math.random() * 0.35).toFixed(2));
+      frag.appendChild(el);
+    }
+    layerHearts.appendChild(frag);
+  }
+
   createStars(window.innerWidth < 600 ? 30 : 50);
   createDeco();
+  if (MOTION_OK) createHearts();
 
   /* ---------------- Parallax + tilt ---------------- */
 
@@ -90,6 +112,7 @@
     layerGlow.style.transform = `translate3d(${curX * 10}px, ${curY * 10}px, 0)`;
     layerStars.style.transform = `translate3d(${curX * 20}px, ${curY * 20}px, 0)`;
     layerDeco.style.transform = `translate3d(${curX * 34}px, ${curY * 34}px, 0)`;
+    layerHearts.style.transform = `translate3d(${curX * 26}px, ${curY * 26}px, 0)`;
 
     if (TILT_OK) {
       stage.style.setProperty("--ry", curX * 6 + "deg");
@@ -230,12 +253,16 @@
 
   function placeInitial() {
     const rect = noPlaceholder.getBoundingClientRect();
-    const bounds = getBounds(rect.width, rect.height);
+    /* Layout metrics, so a card still mid-entrance (scaled, translated)
+       cannot hand us a shrunken slot; the visual centre still positions it. */
+    const w = noPlaceholder.offsetWidth || rect.width;
+    const h = noPlaceholder.offsetHeight || rect.height;
+    const bounds = getBounds(w, h);
     noBtn.style.transition = "none";
-    noBtn.style.width = rect.width + "px";
-    noBtn.style.height = rect.height + "px";
-    noBtn.style.left = clamp(rect.left, bounds.minX, bounds.maxX) + "px";
-    noBtn.style.top = clamp(rect.top, bounds.minY, bounds.maxY) + "px";
+    noBtn.style.width = w + "px";
+    noBtn.style.height = h + "px";
+    noBtn.style.left = clamp(rect.left + rect.width / 2 - w / 2, bounds.minX, bounds.maxX) + "px";
+    noBtn.style.top = clamp(rect.top + rect.height / 2 - h / 2, bounds.minY, bounds.maxY) + "px";
     void noBtn.offsetWidth;
     noBtn.style.transition = "";
     noBtn.classList.add("is-ready");
@@ -264,16 +291,27 @@
     return false;
   }
 
+  /* The reveal is a nicety; the invitation showing up is not. Re-measuring
+     once it is over keeps the NO exactly on its slot on slow devices. */
+  setTimeout(() => {
+    inviteCard.classList.add("reveal-done");
+    keepInView();
+  }, 2500);
+
   if (!checkDeadline()) {
     if (MOTION_OK) {
       let placed = false;
-      const finalizePlacement = () => {
+      /* Wait for the actions row itself: the NO should arrive once the yes
+         has finished fading in, not in the middle of the reveal. */
+      const finalizePlacement = (e) => {
+        if (e && e.target !== actions) return;
         if (placed) return;
         placed = true;
+        inviteCard.removeEventListener("animationend", finalizePlacement);
         placeInitial();
       };
-      inviteCard.addEventListener("animationend", finalizePlacement, { once: true });
-      setTimeout(finalizePlacement, 1000);
+      inviteCard.addEventListener("animationend", finalizePlacement);
+      setTimeout(finalizePlacement, 1800);
     } else {
       placeInitial();
     }
@@ -357,9 +395,40 @@
     window.visualViewport.addEventListener("scroll", keepInView);
   }
 
+  /* ---------------- Countdown to the table ---------------- */
+
+  const DINNER_AT = new Date(2026, 8, 19, 21, 0, 0);
+
+  function plural(n, one, many) {
+    return n + " " + (n === 1 ? one : many);
+  }
+
+  function updateCountdown() {
+    const diff = DINNER_AT.getTime() - Date.now();
+    if (diff <= 0) {
+      countdown.textContent = "\u00c8 adesso. \u2764\ufe0f";
+      return;
+    }
+    const totalMinutes = Math.floor(diff / 60000);
+    const days = Math.floor(totalMinutes / 1440);
+    const hours = Math.floor((totalMinutes % 1440) / 60);
+    const minutes = totalMinutes % 60;
+
+    const parts = [];
+    if (days) parts.push(plural(days, "giorno", "giorni"));
+    if (hours) parts.push(plural(hours, "ora", "ore"));
+    if (minutes || !parts.length) parts.push(plural(minutes, "minuto", "minuti"));
+
+    const tail = parts.length > 1 ? parts.slice(0, -1).join(", ") + " e " + parts[parts.length - 1] : parts[0];
+    countdown.textContent = "\u23f3 Manca poco: " + tail + ".";
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 30000);
+
   /* ---------------- Confetti / hearts burst ---------------- */
 
-  const SHAPES = ["❤️", "🍣", "✨", "💕", "🎊"];
+  const SHAPES = ["❤️", "💕", "❤️", "🍣", "✨", "💖", "🎊"];
   const CONFETTI_COLORS = ["#ff5da2", "#f4c869", "#8a5cff", "#ff8fc2", "#ffffff"];
   let particles = [];
   let rafId = null;
