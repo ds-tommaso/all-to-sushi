@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Francesca, sabato sera... 🍣❤️</title>
+<meta name="description" content="Un invito speciale per una cena sushi da AllTo.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#140a1f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%A3%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="scene" id="scene">
+  <div class="bg" aria-hidden="true">
+    <div class="layer layer-glow" id="layerGlow"></div>
+    <div class="layer layer-stars" id="layerStars"></div>
+    <div class="layer layer-deco" id="layerDeco"></div>
+    <div class="vignette"></div>
+  </div>
+
+  <canvas id="fx" aria-hidden="true"></canvas>
+
+  <main class="stage" id="stage">
+
+    <section class="card" id="inviteCard">
+      <p class="eyebrow">✨ Un invito speciale ✨</p>
+      <h1 class="title">Francesca, <span class="accent">sabato sera</span> hai un impegno.</h1>
+      <p class="emoji-row">🍣 ❤️</p>
+      <div class="details">
+        <p class="time">Ore <strong>21:00</strong></p>
+        <p class="line">Una cena sushi, tu e io.</p>
+      </div>
+      <p class="question">Ci vieni?</p>
+
+      <div class="actions" id="actions">
+        <button type="button" id="yesBtn" class="btn btn-yes">
+          <span>SÌ</span><span class="heart" aria-hidden="true">❤️</span>
+        </button>
+        <span id="noPlaceholder" class="btn btn-no-placeholder" aria-hidden="true">NO</span>
+      </div>
+    </section>
+
+    <section class="card" id="confirmCard" hidden>
+      <p class="eyebrow">🎉 Confermato 🎉</p>
+      <h2 class="title title-sm" id="confirmHeading" tabindex="-1">Sapevo che avresti detto sì! <span class="heart-emoji">❤️🍣</span></h2>
+      <p class="subtitle-confirm">Sabato ore 21:00. Preparati.</p>
+
+      <div class="info-card">
+        <p class="info-place">🍣 <strong>AllTo</strong></p>
+        <p class="info-address">Via Orfeo Mazzitelli, 122/A<br>70124 Bari Poggiofranco (BA)</p>
+        <p class="info-time">Sabato · ore 21:00</p>
+        <a class="btn btn-map" id="mapLink" href="#" target="_blank" rel="noopener noreferrer">📍 Scopri dove</a>
+        <a class="site-link" href="https://www.allto.it/" target="_blank" rel="noopener noreferrer">Sito di AllTo ↗</a>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<button type="button" id="noBtn" class="btn btn-no">NO</button>
+
+<div id="liveRegion" class="sr-only" aria-live="polite"></div>
+
+<noscript><style>#noBtn{display:none} #noPlaceholder{visibility:visible!important}</style></noscript>
+
+<script src="script.js"></script>
+</body>
+</html>
