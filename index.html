@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>Francesca, sabato sera... 🍣❤️</title>
+<title>Polpetta, sabato sera... 🍣❤️</title>
 <meta name="description" content="Un invito speciale per una cena sushi da AllTo.">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#140a1f">
@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap">
-<link rel="stylesheet" href="style.css?v1.0.5">
+<link rel="stylesheet" href="style.css?v1.0.7">
 </head>
 <body>
 
@@ -28,15 +28,15 @@
   <main class="stage" id="stage">
 
     <section class="card" id="inviteCard">
-      <p class="eyebrow">✨ Un invito speciale ✨</p>
-      <h1 class="title">Francesca, <span class="accent">sabato sera</span> hai un impegno.</h1>
+      <p class="eyebrow" id="inviteEyebrow">✨ Un invito speciale ✨</p>
+      <h1 class="title" id="inviteTitle">Polpetta, <span class="accent">sabato sera</span> hai un impegno.</h1>
       <p class="emoji-row">🍣 ❤️</p>
       <div class="details">
-        <p class="time">Ore <strong>21:00</strong></p>
+        <p class="time" id="inviteTime">Ore <strong>21:00</strong></p>
         <p class="line">Una cena sushi, tu e io.</p>
-        <p class="line line-soft">Solo noi due, senza fretta.</p>
+        <p class="line line-soft" id="inviteLineSoft">Solo noi due, senza fretta.</p>
       </div>
-      <p class="question">Ci vieni?</p>
+      <p class="question" id="inviteQuestion">Ci vieni?</p>
 
       <p class="thanks" id="thanksNote" hidden>
         Niente scherzi, stavolta.<br>
@@ -50,26 +50,31 @@
         <span id="noPlaceholder" class="btn btn-no-placeholder" aria-hidden="true">NO</span>
       </div>
 
-      <p class="wa-invite">
+      <p class="invite-flexible" id="inviteFlexible" hidden>
+        🍣 Il posto lo scegliamo insieme: non per forza AllTo a Bari.
+      </p>
+
+      <p class="wa-invite" id="waInviteWrap">
         <a class="wa-link" id="waInvite" href="https://wa.me/393494980758" target="_blank" rel="noopener noreferrer">💬 Scrivimi su WhatsApp</a>
       </p>
 
-      <p class="signature">&mdash; Tommaso</p>
+      <p class="signature">&mdash; Tommasino</p>
     </section>
 
     <section class="card" id="confirmCard" hidden>
       <p class="eyebrow">🎉 Confermato 🎉</p>
       <h2 class="title title-sm" id="confirmHeading" tabindex="-1">Sapevo che avresti detto sì! <span class="heart-emoji">❤️🍣</span></h2>
-      <p class="subtitle-confirm">Sabato ore 21:00. Preparati.</p>
+      <p class="subtitle-confirm" id="confirmSubtitle">Sabato ore 21:00. Preparati.</p>
       <p class="countdown" id="countdown" aria-live="polite"></p>
 
       <div class="info-card">
-        <p class="info-place">🍣 <strong>AllTo</strong></p>
-        <p class="info-address">Via Orfeo Mazzitelli, 122/A<br>70124 Bari Poggiofranco (BA)</p>
-        <p class="info-time">Sabato · ore 21:00</p>
+        <p class="info-place" id="infoPlace">🍣 <strong>AllTo</strong></p>
+        <p class="info-address" id="infoAddress">Via Orfeo Mazzitelli, 122/A<br>70124 Bari Poggiofranco (BA)</p>
+        <p class="info-time" id="infoTime">Sabato · ore 21:00</p>
+        <p class="info-flexible" id="infoFlexible" hidden>🍣 Il posto lo scegliamo insieme: non per forza AllTo a Bari.</p>
         <a class="btn btn-map" id="mapLink" href="#" target="_blank" rel="noopener noreferrer">📍 Scopri dove</a>
         <a class="btn btn-wa" id="waLink" href="https://wa.me/393494980758" target="_blank" rel="noopener noreferrer">💬 Scrivimi su WhatsApp</a>
-        <a class="site-link" href="https://www.allto.it/" target="_blank" rel="noopener noreferrer">Sito di AllTo ↗</a>
+        <a class="site-link" id="siteLink" href="https://www.allto.it/" target="_blank" rel="noopener noreferrer">Sito di AllTo ↗</a>
       </div>
     </section>
 
@@ -82,6 +87,6 @@
 
 <noscript><style>#noBtn{display:none} #noPlaceholder{visibility:visible!important}</style></noscript>
 
-<script src="script.js?v1.0.5"></script>
+<script src="script.js?v1.0.7"></script>
 </body>
 </html>
