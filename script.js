@@ -2,9 +2,7 @@
   "use strict";
 
   const MOTION_OK = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const TILT_OK = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-  const stage = document.getElementById("stage");
   const layerGlow = document.getElementById("layerGlow");
   const layerStars = document.getElementById("layerStars");
   const layerDeco = document.getElementById("layerDeco");
@@ -276,11 +274,6 @@
     layerStars.style.transform = `translate3d(${curX * 20}px, ${curY * 20}px, 0)`;
     layerDeco.style.transform = `translate3d(${curX * 34}px, ${curY * 34}px, 0)`;
     layerHearts.style.transform = `translate3d(${curX * 26}px, ${curY * 26}px, 0)`;
-
-    if (TILT_OK) {
-      stage.style.setProperty("--ry", curX * 6 + "deg");
-      stage.style.setProperty("--rx", -curY * 6 + "deg");
-    }
 
     requestAnimationFrame(parallaxTick);
   }

@@ -149,8 +149,6 @@ img { max-width: 100%; }
   align-items: center;
   justify-content: center;
   padding: clamp(20px, 6vw, 48px) 16px;
-  perspective: 1200px;
-  transform-style: preserve-3d;
 }
 
 /* ---------- Cards ---------- */
@@ -167,8 +165,7 @@ img { max-width: 100%; }
   box-shadow: var(--shadow-glow), inset 0 1px 0 rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(22px) saturate(140%);
   -webkit-backdrop-filter: blur(22px) saturate(140%);
-  transform: perspective(1200px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
-  transition: transform 0.25s var(--ease-smooth), opacity 0.38s ease;
+  transition: opacity 0.38s ease;
 }
 
 #inviteCard {
