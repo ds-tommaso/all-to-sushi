@@ -54,7 +54,7 @@
      button: the SI and the NO go, and the WhatsApp number becomes the way to
      settle when and where. Local time of the device, as she reads it. */
   const ALWAYS_OPEN_AT = new Date(2026, 8, 20, 0, 0, 0);
-  const ALWAYS_OPEN_TITLE = ["Francesca, c’è ", "sempre spazio", " per il sushi."];
+  const ALWAYS_OPEN_TITLE = ["Polpetta, c’è ", "sempre spazio", " per il sushi."];
 
   let alwaysOpen = false;
   let countdownTimer = null;
