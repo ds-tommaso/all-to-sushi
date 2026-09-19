@@ -18,6 +18,9 @@
   const inviteTitle = document.getElementById("inviteTitle");
   const inviteTime = document.getElementById("inviteTime");
   const inviteLineSoft = document.getElementById("inviteLineSoft");
+  const inviteQuestion = document.getElementById("inviteQuestion");
+  const inviteFlexible = document.getElementById("inviteFlexible");
+  const waInviteWrap = document.getElementById("waInviteWrap");
   const actions = document.getElementById("actions");
   const yesBtn = document.getElementById("yesBtn");
   const waInvite = document.getElementById("waInvite");
@@ -46,9 +49,10 @@
   /* ---------------- Always open: after 19/09/2026 ---------------- */
 
   /* Once that Saturday is behind us the invitation stops being about one
-     evening: there is always room for sushi. No fixed hour, and no fixed
-     place either — only the WhatsApp number is left, so we settle where and
-     when together. Local time of the device, as she reads it. */
+     evening: there is always room for sushi. Nothing is fixed any more — not
+     the hour, not the place — so there is nothing left to answer with a
+     button: the SI and the NO go, and the WhatsApp number becomes the way to
+     settle when and where. Local time of the device, as she reads it. */
   const ALWAYS_OPEN_AT = new Date(2026, 8, 20, 0, 0, 0);
   const ALWAYS_OPEN_TITLE = ["Francesca, c’è ", "sempre spazio", " per il sushi."];
 
@@ -71,6 +75,18 @@
     setInviteTitle(ALWAYS_OPEN_TITLE[0], ALWAYS_OPEN_TITLE[1], ALWAYS_OPEN_TITLE[2]);
     inviteTime.hidden = true;
     inviteLineSoft.textContent = "Quando vuoi tu: il giorno lo scegliamo insieme.";
+    inviteQuestion.textContent = "Quando ci andiamo?";
+
+    /* No date to say yes to, so no SI and no NO. The NO is already gone on
+       its own by now: THANKS_AT falls earlier the same day. */
+    actions.hidden = true;
+    noBtn.hidden = true;
+    noBtn.classList.remove("is-ready");
+
+    /* The WhatsApp link is the only way in now, so it stops being a footnote
+       and becomes the button — with the place left open. */
+    inviteFlexible.hidden = false;
+    waInviteWrap.classList.add("is-cta");
 
     confirmSubtitle.textContent = "Nessuna scadenza: c’è sempre spazio per il sushi.";
 
