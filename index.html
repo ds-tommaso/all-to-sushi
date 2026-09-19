@@ -3,15 +3,15 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>🍣❤️</title>
+  <title>❤️</title>
   <meta name="description" content="Un invito speciale per una cena sushi da AllTo.">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#140a1f">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%A3%3C/text%3E%3C/svg%3E">
+  <link rel="icon" id="favicon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%A3%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap">
-  <link rel="stylesheet" href="style.css?v1.1">
+  <link rel="stylesheet" href="style.css?v1.2">
 </head>
 
 <body>
@@ -32,7 +32,7 @@
       <section class="card" id="inviteCard">
         <p class="eyebrow" id="inviteEyebrow">✨ Un invito speciale ✨</p>
         <h1 class="title" id="inviteTitle">Polpetta, <span class="accent">sabato sera</span> hai un impegno.</h1>
-        <p class="emoji-row">🍣 ❤️</p>
+        <p class="emoji-row" id="emojiRow">🍣 ❤️</p>
         <div class="details">
           <p class="time" id="inviteTime">Ore <strong>21:00</strong></p>
           <p class="line" id="inviteLine">Una cena sushi, tu e io.</p>
@@ -64,7 +64,7 @@
 
       <section class="card" id="confirmCard" hidden>
         <p class="eyebrow">🎉 Confermato 🎉</p>
-        <h2 class="title title-sm" id="confirmHeading" tabindex="-1">Sapevo che avresti detto sì! <span class="heart-emoji">❤️🍣</span></h2>
+        <h2 class="title title-sm" id="confirmHeading" tabindex="-1">Sapevo che avresti detto sì! <span class="heart-emoji" id="heartEmoji">❤️🍣</span></h2>
         <p class="subtitle-confirm" id="confirmSubtitle">Sabato ore 21:00. Preparati.</p>
         <p class="countdown" id="countdown" aria-live="polite"></p>
 
@@ -97,8 +97,8 @@
     </style>
   </noscript>
 
-  <script src="config.js?v1.1"></script>
-  <script src="script.js?v1.1"></script>
+  <script src="config.js?v1.2"></script>
+  <script src="script.js?v1.2"></script>
 </body>
 
 </html>

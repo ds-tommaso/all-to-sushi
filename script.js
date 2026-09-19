@@ -21,6 +21,8 @@
   const inviteLineSoft = document.getElementById("inviteLineSoft");
   const inviteQuestion = document.getElementById("inviteQuestion");
   const inviteFlexible = document.getElementById("inviteFlexible");
+  const emojiRow = document.getElementById("emojiRow");
+  const heartEmoji = document.getElementById("heartEmoji");
   const waInviteWrap = document.getElementById("waInviteWrap");
   const actions = document.getElementById("actions");
   const yesBtn = document.getElementById("yesBtn");
@@ -46,7 +48,7 @@
   /* ---------------- Config: date/time, place, links ---------------- */
 
   const CONFIG = window.APP_CONFIG || {};
-  const D = CONFIG.dinner || { year: 2026, month: 9, day: 19, hour: 21, minute: 0 };
+  const D = CONFIG.eventDate || { year: 2026, month: 9, day: 19, hour: 21, minute: 0 };
 
   const DINNER_AT = new Date(D.year, D.month - 1, D.day, D.hour, D.minute, 0);
 
@@ -66,23 +68,31 @@
   const MEAL_ARTICLE = IS_LUNCH ? "un" : "una";
   const MEAL_PREP = IS_LUNCH ? "del" : "della";
 
-  if (CONFIG.placeName) {
-    infoPlace.innerHTML = "🍣 <strong>" + CONFIG.placeName + "</strong>";
-    siteLink.textContent = "Sito di " + CONFIG.placeName + " ↗";
+  const FOOD_EMOJI = CONFIG.foodEmoji || "🍣";
+  const FOOD_NAME = CONFIG.foodName || "sushi";
+  const FOOD_ARTICLE = CONFIG.foodArticle || "il";
+
+  if (CONFIG.eventPlace) {
+    infoPlace.innerHTML = FOOD_EMOJI + " <strong>" + CONFIG.eventPlace + "</strong>";
+    siteLink.textContent = "Sito di " + CONFIG.eventPlace + " ↗";
   }
 
   inviteTime.innerHTML = "Ore <strong>" + TIME_STR + "</strong>";
   confirmSubtitle.textContent = DAY_NAME_CAP + " ore " + TIME_STR + ". Preparati.";
   infoTime.textContent = DAY_NAME_CAP + " · ore " + TIME_STR;
+  emojiRow.textContent = FOOD_EMOJI + " ❤️";
+  inviteFlexible.textContent = FOOD_EMOJI + " Il posto lo scegliamo insieme.";
+  infoFlexible.textContent = FOOD_EMOJI + " Il posto lo scegliamo insieme.";
+  if (heartEmoji) heartEmoji.textContent = "❤️" + FOOD_EMOJI;
 
   const metaDescription = document.querySelector('meta[name="description"]');
   if (metaDescription) {
     metaDescription.setAttribute(
       "content",
-      "Un invito speciale per " + MEAL_ARTICLE + " " + MEAL_WORD + " sushi da " + (CONFIG.placeName || "AllTo") + "."
+      "Un invito speciale per " + MEAL_ARTICLE + " " + MEAL_WORD + " " + FOOD_NAME + " da " + (CONFIG.eventPlace || "AllTo") + "."
     );
   }
-  inviteLine.textContent = (IS_LUNCH ? "Un " : "Una ") + MEAL_WORD + " sushi, tu e io.";
+  inviteLine.textContent = (IS_LUNCH ? "Un " : "Una ") + MEAL_WORD + " " + FOOD_NAME + ", tu e io.";
 
   function pickRandom(list, fallback) {
     if (!list || !list.length) return fallback;
@@ -92,22 +102,28 @@
   const HER_NAME = pickRandom(CONFIG.herNames, "Polpetta");
   const HIS_NAME = pickRandom(CONFIG.hisNames, "Tommasino");
 
-  document.title = HER_NAME + ", " + DAY_NAME + " sera... 🍣❤️";
+  document.title = HER_NAME + ", " + DAY_NAME + " sera... " + FOOD_EMOJI + "❤️";
   signature.textContent = "— " + HIS_NAME;
+
+  const favicon = document.getElementById("favicon");
+  if (favicon) {
+    const svg = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>" + FOOD_EMOJI + "</text></svg>";
+    favicon.href = "data:image/svg+xml," + encodeURIComponent(svg);
+  }
 
   /* ---------------- Address / map link ---------------- */
 
-  mapLink.href = CONFIG.mapsUrl || "#";
-  if (CONFIG.siteUrl) siteLink.href = CONFIG.siteUrl;
+  mapLink.href = CONFIG.eventPlaceMap || "#";
+  if (CONFIG.eventUrl) siteLink.href = CONFIG.eventUrl;
 
   /* ---------------- Always open: once the dinner time itself has passed ---------------- */
 
   /* Once that moment is behind us the invitation stops being about one
-     evening: there is always room for sushi. Nothing is fixed any more — not
+     evening: there is always room for it. Nothing is fixed any more — not
      the hour, not the place — so there is nothing left to answer with a
      button: the SI and the NO go, and the WhatsApp number becomes the way to
      settle when and where. Local time of the device, as she reads it. */
-  const ALWAYS_OPEN_TITLE = [HER_NAME + ", c’è ", "sempre spazio", " per il sushi."];
+  const ALWAYS_OPEN_TITLE = [HER_NAME + ", c’è ", "sempre spazio", " per " + FOOD_ARTICLE + " " + FOOD_NAME + "."];
 
   let alwaysOpen = false;
   let countdownTimer = null;
@@ -143,7 +159,7 @@
     inviteFlexible.hidden = false;
     waInviteWrap.classList.add("is-cta");
 
-    confirmSubtitle.textContent = "Nessuna scadenza: c’è sempre spazio per il sushi.";
+    confirmSubtitle.textContent = "Nessuna scadenza: c’è sempre spazio per " + FOOD_ARTICLE + " " + FOOD_NAME + ".";
 
     /* No date to count down to any more. */
     countdown.hidden = true;
@@ -193,7 +209,7 @@
   }
 
   function createDeco() {
-    const items = ["❤️", "🍣", "✨", "💕", "🥢", "🌙", "🍱"];
+    const items = ["❤️", FOOD_EMOJI, "✨", "💕", "🥢", "🌙", "🍱"];
     const count = window.innerWidth < 600 ? 8 : 14;
     const frag = document.createDocumentFragment();
     for (let i = 0; i < count; i++) {
@@ -281,7 +297,7 @@
 
   /* From THANKS_AT onward (12 hours before dinner) the NO button retires:
      only the yes is left, plus a thank-you. */
-  const THANKS_HEADING = "Grazie. Davvero. \u2764\ufe0f\ud83c\udf63";
+  const THANKS_HEADING = "Grazie. Davvero. \u2764\ufe0f" + FOOD_EMOJI;
 
   let msgIndex = 0;
   let dodgeCount = 0;
@@ -623,7 +639,7 @@
 
   /* ---------------- Confetti / hearts burst ---------------- */
 
-  const SHAPES = ["❤️", "💕", "❤️", "🍣", "✨", "💖", "🎊"];
+  const SHAPES = ["❤️", "💕", "❤️", FOOD_EMOJI, "✨", "💖", "🎊"];
   const CONFETTI_COLORS = ["#ff5da2", "#f4c869", "#8a5cff", "#ff8fc2", "#ffffff"];
   let particles = [];
   let rafId = null;
