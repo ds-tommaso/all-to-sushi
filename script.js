@@ -291,7 +291,7 @@
 
   /* From THANKS_AT onward (12 hours before dinner) the NO button retires:
      only the yes is left, plus a thank-you. */
-  const THANKS_HEADING = "Grazie. Davvero. \u2764\ufe0f" + FOOD_EMOJI;
+  const THANKS_HEADING = "Grazie. \u2764\ufe0f" + FOOD_EMOJI;
 
   let msgIndex = 0;
   let dodgeCount = 0;
