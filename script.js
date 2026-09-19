@@ -50,9 +50,9 @@
 
   const DINNER_AT = new Date(D.year, D.month - 1, D.day, D.hour, D.minute, 0);
 
-  /* Under 6 ore all'evento: solo SÌ. Evento passato: l'invito diventa una
+  /* Under 12 ore all'evento: solo SÌ. Evento passato: l'invito diventa una
      proposta aperta (nessuna data fissa, si sceglie insieme). */
-  const THANKS_AT = new Date(DINNER_AT.getTime() - 6 * 60 * 60 * 1000);
+  const THANKS_AT = new Date(DINNER_AT.getTime() - 12 * 60 * 60 * 1000);
   const ALWAYS_OPEN_AT = DINNER_AT;
 
   const WEEKDAYS = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"];
@@ -133,7 +133,7 @@
     inviteQuestion.textContent = "Quando ci andiamo?";
 
     /* No date to say yes to, so no SI and no NO. The NO is already gone on
-       its own by now: THANKS_AT falls 6 hours earlier. */
+       its own by now: THANKS_AT falls 12 hours earlier. */
     actions.hidden = true;
     noBtn.hidden = true;
     noBtn.classList.remove("is-ready");
@@ -279,7 +279,7 @@
     "Il NO non esiste qui 💍", "Solo il SÌ è un'opzione ❤️"
   ];
 
-  /* From THANKS_AT onward (6 hours before dinner) the NO button retires:
+  /* From THANKS_AT onward (12 hours before dinner) the NO button retires:
      only the yes is left, plus a thank-you. */
   const THANKS_HEADING = "Grazie. Davvero. \u2764\ufe0f\ud83c\udf63";
 
