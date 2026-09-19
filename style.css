@@ -232,6 +232,30 @@ img { max-width: 100%; }
   transition: opacity 0.55s var(--ease-smooth), transform 0.55s var(--ease-smooth);
 }
 
+.btn-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-light);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.btn-close:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: scale(1.06);
+}
+
 .eyebrow {
   margin: 0 0 10px;
   text-transform: uppercase;

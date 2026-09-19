@@ -36,6 +36,7 @@
   const siteLink = document.getElementById("siteLink");
   const signature = document.getElementById("signature");
   const liveRegion = document.getElementById("liveRegion");
+  const closeConfirm = document.getElementById("closeConfirm");
   const canvas = document.getElementById("fx");
   const ctx = canvas.getContext("2d");
 
@@ -740,4 +741,10 @@
       /* vibration not supported, ignore */
     }
   });
+
+  if (closeConfirm) {
+    closeConfirm.addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+  }
 })();
