@@ -17,6 +17,7 @@
   const inviteEyebrow = document.getElementById("inviteEyebrow");
   const inviteTitle = document.getElementById("inviteTitle");
   const inviteTime = document.getElementById("inviteTime");
+  const inviteLine = document.getElementById("inviteLine");
   const inviteLineSoft = document.getElementById("inviteLineSoft");
   const inviteQuestion = document.getElementById("inviteQuestion");
   const inviteFlexible = document.getElementById("inviteFlexible");
@@ -29,11 +30,11 @@
   const thanksNote = document.getElementById("thanksNote");
   const countdown = document.getElementById("countdown");
   const infoPlace = document.getElementById("infoPlace");
-  const infoAddress = document.getElementById("infoAddress");
   const infoTime = document.getElementById("infoTime");
   const infoFlexible = document.getElementById("infoFlexible");
   const mapLink = document.getElementById("mapLink");
   const siteLink = document.getElementById("siteLink");
+  const signature = document.getElementById("signature");
   const liveRegion = document.getElementById("liveRegion");
   const canvas = document.getElementById("fx");
   const ctx = canvas.getContext("2d");
@@ -42,19 +43,68 @@
      further out than ~24 days is simply re-checked on the next visit. */
   const MAX_TIMEOUT = 2147483647;
 
+  /* ---------------- Config: date/time, place, links ---------------- */
+
+  const CONFIG = window.APP_CONFIG || {};
+  const D = CONFIG.dinner || { year: 2026, month: 9, day: 19, hour: 21, minute: 0 };
+
+  const DINNER_AT = new Date(D.year, D.month - 1, D.day, D.hour, D.minute, 0);
+  const THANKS_AT = new Date(D.year, D.month - 1, D.day, 12, 0, 0);
+  const ALWAYS_OPEN_AT = new Date(D.year, D.month - 1, D.day + 1, 0, 0, 0);
+
+  const WEEKDAYS = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"];
+  const DAY_NAME = WEEKDAYS[DINNER_AT.getDay()];
+  const DAY_NAME_CAP = DAY_NAME.charAt(0).toUpperCase() + DAY_NAME.slice(1);
+  const TIME_STR = String(D.hour).padStart(2, "0") + ":" + String(D.minute).padStart(2, "0");
+
+  /* Tra le 12 e le 15 è pranzo, altrimenti cena. */
+  const IS_LUNCH = D.hour >= 12 && D.hour < 15;
+  const MEAL_WORD = IS_LUNCH ? "pranzo" : "cena";
+  const MEAL_ARTICLE = IS_LUNCH ? "un" : "una";
+  const MEAL_PREP = IS_LUNCH ? "del" : "della";
+
+  if (CONFIG.placeName) {
+    infoPlace.innerHTML = "🍣 <strong>" + CONFIG.placeName + "</strong>";
+    siteLink.textContent = "Sito di " + CONFIG.placeName + " ↗";
+  }
+
+  inviteTime.innerHTML = "Ore <strong>" + TIME_STR + "</strong>";
+  confirmSubtitle.textContent = DAY_NAME_CAP + " ore " + TIME_STR + ". Preparati.";
+  infoTime.textContent = DAY_NAME_CAP + " · ore " + TIME_STR;
+
+  const metaDescription = document.querySelector('meta[name="description"]');
+  if (metaDescription) {
+    metaDescription.setAttribute(
+      "content",
+      "Un invito speciale per " + MEAL_ARTICLE + " " + MEAL_WORD + " sushi da " + (CONFIG.placeName || "AllTo") + "."
+    );
+  }
+  inviteLine.textContent = (IS_LUNCH ? "Un " : "Una ") + MEAL_WORD + " sushi, tu e io.";
+
+  function pickRandom(list, fallback) {
+    if (!list || !list.length) return fallback;
+    return list[Math.floor(Math.random() * list.length)];
+  }
+
+  const HER_NAME = pickRandom(CONFIG.herNames, "Polpetta");
+  const HIS_NAME = pickRandom(CONFIG.hisNames, "Tommasino");
+
+  document.title = HER_NAME + ", " + DAY_NAME + " sera... 🍣❤️";
+  signature.textContent = "— " + HIS_NAME;
+
   /* ---------------- Address / map link ---------------- */
 
-  mapLink.href = "https://maps.app.goo.gl/PbNHBsBvqFsUjZvU8";
+  mapLink.href = CONFIG.mapsUrl || "#";
+  if (CONFIG.siteUrl) siteLink.href = CONFIG.siteUrl;
 
-  /* ---------------- Always open: after 19/09/2026 ---------------- */
+  /* ---------------- Always open: after the dinner date ---------------- */
 
   /* Once that Saturday is behind us the invitation stops being about one
      evening: there is always room for sushi. Nothing is fixed any more — not
      the hour, not the place — so there is nothing left to answer with a
      button: the SI and the NO go, and the WhatsApp number becomes the way to
      settle when and where. Local time of the device, as she reads it. */
-  const ALWAYS_OPEN_AT = new Date(2026, 8, 20, 0, 0, 0);
-  const ALWAYS_OPEN_TITLE = ["Polpetta, c’è ", "sempre spazio", " per il sushi."];
+  const ALWAYS_OPEN_TITLE = [HER_NAME + ", c’è ", "sempre spazio", " per il sushi."];
 
   let alwaysOpen = false;
   let countdownTimer = null;
@@ -66,6 +116,8 @@
     span.textContent = accent;
     inviteTitle.append(span, after);
   }
+
+  setInviteTitle(HER_NAME + ", ", DAY_NAME + " sera", " hai un impegno.");
 
   function goAlwaysOpen() {
     if (alwaysOpen) return;
@@ -100,7 +152,6 @@
 
     /* Only the WhatsApp number stays: the place is up for discussion. */
     infoPlace.hidden = true;
-    infoAddress.hidden = true;
     infoTime.hidden = true;
     mapLink.hidden = true;
     siteLink.hidden = true;
@@ -227,7 +278,6 @@
 
   /* After this moment the NO button retires: only the yes is left, plus a
      thank-you. Local time of the device, so 12:00 as she reads it. */
-  const THANKS_AT = new Date(2026, 8, 19, 12, 0, 0);
   const THANKS_HEADING = "Grazie. Davvero. \u2764\ufe0f\ud83c\udf63";
 
   let msgIndex = 0;
@@ -496,8 +546,6 @@
 
   /* ---------------- Countdown to the table ---------------- */
 
-  const DINNER_AT = new Date(2026, 8, 19, 21, 0, 0);
-
   function plural(n, one, many) {
     return n + " " + (n === 1 ? one : many);
   }
@@ -621,7 +669,7 @@
       inviteCard.hidden = true;
       confirmCard.hidden = false;
       requestAnimationFrame(() => confirmCard.classList.add("is-active"));
-      liveRegion.textContent = "Hai risposto sì! Ecco i dettagli della cena.";
+      liveRegion.textContent = "Hai risposto sì! Ecco i dettagli " + MEAL_PREP + " " + MEAL_WORD + ".";
       confirmHeading.focus({ preventScroll: true });
     }, 380);
   }

@@ -521,12 +521,6 @@ img { max-width: 100%; }
   font-size: 1.15rem;
 }
 
-.info-address {
-  margin: 0 0 8px;
-  color: var(--text-muted);
-  line-height: 1.5;
-}
-
 .info-time {
   margin: 0 0 18px;
   font-weight: 700;
