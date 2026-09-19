@@ -9,5 +9,5 @@ window.APP_CONFIG = {
   foodArticle: "il", // il sushi, la pizza
 
   herNames: ["Fra", "Chicca", "Chiccaaaa", "Polpetta", "Francicca"],
-  hisNames: ["Tommi", "Tommasino", "Poplettina", "Bubino"]
+  hisNames: ["Tommi", "Tommasino"]
 };

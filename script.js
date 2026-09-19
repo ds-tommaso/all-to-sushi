@@ -664,7 +664,7 @@
         y: oy,
         vx: Math.cos(angle) * speed * 0.6,
         vy: Math.sin(angle) * speed - 4,
-        gravity: 0.14 + Math.random() * 0.08,
+        gravity: 0.15 + Math.random() * 0.08,
         size: 6 + Math.random() * 10,
         rotation: Math.random() * Math.PI * 2,
         vr: (Math.random() - 0.5) * 0.3,

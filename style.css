@@ -41,8 +41,13 @@ body {
   overflow-x: hidden;
 }
 
-img { max-width: 100%; }
-[hidden] { display: none !important; }
+img {
+  max-width: 100%;
+}
+
+[hidden] {
+  display: none !important;
+}
 
 .sr-only {
   position: absolute;
@@ -85,8 +90,15 @@ img { max-width: 100%; }
 }
 
 @keyframes glowPulse {
-  0%, 100% { opacity: 0.7; }
-  50% { opacity: 1; }
+
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+
+  50% {
+    opacity: 1;
+  }
 }
 
 .star {
@@ -100,8 +112,15 @@ img { max-width: 100%; }
 }
 
 @keyframes twinkle {
-  0%, 100% { opacity: 0; }
-  50% { opacity: 0.9; }
+
+  0%,
+  100% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.9;
+  }
 }
 
 .deco-item {
@@ -112,8 +131,13 @@ img { max-width: 100%; }
 }
 
 @keyframes floaty {
-  from { transform: translateY(0) rotate(-4deg); }
-  to { transform: translateY(-24px) rotate(4deg); }
+  from {
+    transform: translateY(0) rotate(-4deg);
+  }
+
+  to {
+    transform: translateY(-24px) rotate(4deg);
+  }
 }
 
 .float-heart {
@@ -126,10 +150,23 @@ img { max-width: 100%; }
 }
 
 @keyframes riseUp {
-  0% { transform: translateY(0) rotate(-8deg) scale(0.9); opacity: 0; }
-  12% { opacity: var(--peak, 0.45); }
-  78% { opacity: var(--peak, 0.45); }
-  100% { transform: translateY(-118vh) rotate(8deg) scale(1.08); opacity: 0; }
+  0% {
+    transform: translateY(0) rotate(-8deg) scale(0.9);
+    opacity: 0;
+  }
+
+  12% {
+    opacity: var(--peak, 0.45);
+  }
+
+  78% {
+    opacity: var(--peak, 0.45);
+  }
+
+  100% {
+    transform: translateY(-118vh) rotate(8deg) scale(1.08);
+    opacity: 0;
+  }
 }
 
 .vignette {
@@ -173,46 +210,94 @@ img { max-width: 100%; }
 }
 
 @keyframes cardIn {
-  from { opacity: 0; transform: translateY(26px) scale(0.96); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* Each line arrives in turn, so the invite is read rather than scanned.
    The actions row only fades: moving it would shift the NO button's slot
    while it is being measured. */
-#inviteCard > * {
+#inviteCard>* {
   animation: revealUp 0.7s var(--ease-smooth) backwards;
 }
 
 /* Safety net: whatever happens to the animations, the invitation is
    readable a couple of seconds in. */
-#inviteCard.reveal-done > * {
+#inviteCard.reveal-done>* {
   animation: none !important;
 }
 
-#inviteCard > .actions {
+#inviteCard>.actions {
   animation-name: revealFade;
 }
 
-#inviteCard > *:nth-child(1) { animation-delay: 0.30s; }
-#inviteCard > *:nth-child(2) { animation-delay: 0.40s; }
-#inviteCard > *:nth-child(3) { animation-delay: 0.50s; }
-#inviteCard > *:nth-child(4) { animation-delay: 0.60s; }
-#inviteCard > *:nth-child(5) { animation-delay: 0.70s; }
-#inviteCard > *:nth-child(6) { animation-delay: 0.78s; }
-#inviteCard > *:nth-child(7) { animation-delay: 0.86s; }
-#inviteCard > *:nth-child(8) { animation-delay: 0.96s; }
-#inviteCard > *:nth-child(9) { animation-delay: 1.06s; }
-#inviteCard > *:nth-child(10) { animation-delay: 1.16s; }
+#inviteCard>*:nth-child(1) {
+  animation-delay: 0.30s;
+}
+
+#inviteCard>*:nth-child(2) {
+  animation-delay: 0.40s;
+}
+
+#inviteCard>*:nth-child(3) {
+  animation-delay: 0.50s;
+}
+
+#inviteCard>*:nth-child(4) {
+  animation-delay: 0.60s;
+}
+
+#inviteCard>*:nth-child(5) {
+  animation-delay: 0.70s;
+}
+
+#inviteCard>*:nth-child(6) {
+  animation-delay: 0.78s;
+}
+
+#inviteCard>*:nth-child(7) {
+  animation-delay: 0.86s;
+}
+
+#inviteCard>*:nth-child(8) {
+  animation-delay: 0.96s;
+}
+
+#inviteCard>*:nth-child(9) {
+  animation-delay: 1.06s;
+}
+
+#inviteCard>*:nth-child(10) {
+  animation-delay: 1.16s;
+}
 
 @keyframes revealUp {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes revealFade {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .card.is-leaving {
@@ -259,7 +344,7 @@ img { max-width: 100%; }
 .eyebrow {
   margin: 0 0 10px;
   text-transform: uppercase;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.15em;
   font-size: 0.72rem;
   font-weight: 700;
   color: var(--accent-gold);
@@ -291,8 +376,15 @@ img { max-width: 100%; }
 }
 
 @keyframes shimmer {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 .emoji-row {
@@ -475,9 +567,19 @@ img { max-width: 100%; }
 }
 
 @keyframes heartbeat {
-  0%, 100% { transform: scale(1); }
-  25% { transform: scale(1.18); }
-  40% { transform: scale(0.98); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  25% {
+    transform: scale(1.18);
+  }
+
+  40% {
+    transform: scale(0.98);
+  }
 }
 
 .btn-no-placeholder {
@@ -519,11 +621,25 @@ img { max-width: 100%; }
 }
 
 @keyframes wiggle {
-  0% { transform: rotate(0deg) scale(1); }
-  25% { transform: rotate(-8deg) scale(1.05); }
-  55% { transform: rotate(7deg) scale(1.05); }
-  80% { transform: rotate(-3deg) scale(1); }
-  100% { transform: rotate(0deg) scale(1); }
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  25% {
+    transform: rotate(-8deg) scale(1.05);
+  }
+
+  55% {
+    transform: rotate(7deg) scale(1.05);
+  }
+
+  80% {
+    transform: rotate(-3deg) scale(1);
+  }
+
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
 }
 
 /* ---------- Confirmation info card ---------- */
@@ -534,7 +650,7 @@ img { max-width: 100%; }
   border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.07);
   border: 1px solid rgba(255, 255, 255, 0.16);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .info-place {
@@ -612,35 +728,97 @@ img { max-width: 100%; }
 /* ---------- Responsive ---------- */
 
 @media (min-width: 640px) {
-  .deco-item { filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4)); }
+  .deco-item {
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+  }
 }
 
 @media (max-height: 560px) {
-  .stage { padding: 8px 16px; }
-  .card { padding: 14px clamp(16px, 4vw, 28px); }
-  .eyebrow { margin-bottom: 6px; }
-  .title { font-size: clamp(1.15rem, 3.4vw, 1.45rem); }
-  .emoji-row { margin: 2px 0 6px; font-size: 1.2rem; }
-  .details .time { font-size: 0.95rem; }
-  .details .line, .details .line-soft { font-size: 0.92rem; }
-  .question { margin: 8px 0 12px; font-size: clamp(1.05rem, 3vw, 1.2rem); }
-  .btn { min-height: 44px; padding: 10px 20px; }
-  .wa-invite { margin-top: 10px; }
-  .wa-invite.is-cta { margin-top: 12px; }
-  .wa-invite.is-cta .wa-link { min-height: 44px; padding: 10px 20px; }
-  .invite-flexible { font-size: 0.9rem; }
-  .signature { margin-top: 6px; font-size: 1.05rem; }
+  .stage {
+    padding: 8px 16px;
+  }
+
+  .card {
+    padding: 14px clamp(16px, 4vw, 28px);
+  }
+
+  .eyebrow {
+    margin-bottom: 6px;
+  }
+
+  .title {
+    font-size: clamp(1.15rem, 3.4vw, 1.45rem);
+  }
+
+  .emoji-row {
+    margin: 2px 0 6px;
+    font-size: 1.2rem;
+  }
+
+  .details .time {
+    font-size: 0.95rem;
+  }
+
+  .details .line,
+  .details .line-soft {
+    font-size: 0.92rem;
+  }
+
+  .question {
+    margin: 8px 0 12px;
+    font-size: clamp(1.05rem, 3vw, 1.2rem);
+  }
+
+  .btn {
+    min-height: 44px;
+    padding: 10px 20px;
+  }
+
+  .wa-invite {
+    margin-top: 10px;
+  }
+
+  .wa-invite.is-cta {
+    margin-top: 12px;
+  }
+
+  .wa-invite.is-cta .wa-link {
+    min-height: 44px;
+    padding: 10px 20px;
+  }
+
+  .invite-flexible {
+    font-size: 0.9rem;
+  }
+
+  .signature {
+    margin-top: 6px;
+    font-size: 1.05rem;
+  }
 }
 
 @media (min-width: 1024px) {
-  .card { max-width: 480px; }
+  .card {
+    max-width: 480px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .deco-item, .star, .layer-glow, .btn-yes .heart, .float-heart, .accent {
+
+  .deco-item,
+  .star,
+  .layer-glow,
+  .btn-yes .heart,
+  .float-heart,
+  .accent {
     animation: none !important;
   }
-  #inviteCard, #inviteCard > *, .card, .btn, .btn-no {
+
+  #inviteCard,
+  #inviteCard>*,
+  .card,
+  .btn,
+  .btn-no {
     animation: none !important;
     opacity: 1 !important;
     transition-duration: 0.15s !important;
