@@ -13,6 +13,11 @@
   const inviteCard = document.getElementById("inviteCard");
   const confirmCard = document.getElementById("confirmCard");
   const confirmHeading = document.getElementById("confirmHeading");
+  const confirmSubtitle = document.getElementById("confirmSubtitle");
+  const inviteEyebrow = document.getElementById("inviteEyebrow");
+  const inviteTitle = document.getElementById("inviteTitle");
+  const inviteTime = document.getElementById("inviteTime");
+  const inviteLineSoft = document.getElementById("inviteLineSoft");
   const actions = document.getElementById("actions");
   const yesBtn = document.getElementById("yesBtn");
   const waInvite = document.getElementById("waInvite");
@@ -20,14 +25,85 @@
   const noPlaceholder = document.getElementById("noPlaceholder");
   const thanksNote = document.getElementById("thanksNote");
   const countdown = document.getElementById("countdown");
+  const infoPlace = document.getElementById("infoPlace");
+  const infoAddress = document.getElementById("infoAddress");
+  const infoTime = document.getElementById("infoTime");
+  const infoFlexible = document.getElementById("infoFlexible");
   const mapLink = document.getElementById("mapLink");
+  const siteLink = document.getElementById("siteLink");
   const liveRegion = document.getElementById("liveRegion");
   const canvas = document.getElementById("fx");
   const ctx = canvas.getContext("2d");
 
+  /* setTimeout silently fires straight away past this delay, so any deadline
+     further out than ~24 days is simply re-checked on the next visit. */
+  const MAX_TIMEOUT = 2147483647;
+
   /* ---------------- Address / map link ---------------- */
 
   mapLink.href = "https://maps.app.goo.gl/PbNHBsBvqFsUjZvU8";
+
+  /* ---------------- Always open: after 19/09/2026 ---------------- */
+
+  /* Once that Saturday is behind us the invitation stops being about one
+     evening: there is always room for sushi. No fixed hour, and no fixed
+     place either — only the WhatsApp number is left, so we settle where and
+     when together. Local time of the device, as she reads it. */
+  const ALWAYS_OPEN_AT = new Date(2026, 8, 20, 0, 0, 0);
+  const ALWAYS_OPEN_TITLE = ["Francesca, c’è ", "sempre spazio", " per il sushi."];
+
+  let alwaysOpen = false;
+  let countdownTimer = null;
+
+  function setInviteTitle(before, accent, after) {
+    inviteTitle.textContent = before;
+    const span = document.createElement("span");
+    span.className = "accent";
+    span.textContent = accent;
+    inviteTitle.append(span, after);
+  }
+
+  function goAlwaysOpen() {
+    if (alwaysOpen) return;
+    alwaysOpen = true;
+
+    inviteEyebrow.textContent = "✨ L’invito resta aperto ✨";
+    setInviteTitle(ALWAYS_OPEN_TITLE[0], ALWAYS_OPEN_TITLE[1], ALWAYS_OPEN_TITLE[2]);
+    inviteTime.hidden = true;
+    inviteLineSoft.textContent = "Quando vuoi tu: il giorno lo scegliamo insieme.";
+
+    confirmSubtitle.textContent = "Nessuna scadenza: c’è sempre spazio per il sushi.";
+
+    /* No date to count down to any more. */
+    countdown.hidden = true;
+    countdown.textContent = "";
+    if (countdownTimer) {
+      clearInterval(countdownTimer);
+      countdownTimer = null;
+    }
+
+    /* Only the WhatsApp number stays: the place is up for discussion. */
+    infoPlace.hidden = true;
+    infoAddress.hidden = true;
+    infoTime.hidden = true;
+    mapLink.hidden = true;
+    siteLink.hidden = true;
+    infoFlexible.hidden = false;
+  }
+
+  /* True when the page is already past the date; otherwise it flips on its
+     own should the page be open when midnight comes. */
+  function checkAlwaysOpen() {
+    const remaining = ALWAYS_OPEN_AT.getTime() - Date.now();
+    if (remaining <= 0) {
+      goAlwaysOpen();
+      return true;
+    }
+    if (remaining < MAX_TIMEOUT) setTimeout(goAlwaysOpen, remaining);
+    return false;
+  }
+
+  checkAlwaysOpen();
 
   /* ---------------- Decorative background ---------------- */
 
@@ -137,7 +213,6 @@
      thank-you. Local time of the device, so 12:00 as she reads it. */
   const THANKS_AT = new Date(2026, 8, 19, 12, 0, 0);
   const THANKS_HEADING = "Grazie. Davvero. \u2764\ufe0f\ud83c\udf63";
-  const MAX_TIMEOUT = 2147483647;
 
   let msgIndex = 0;
   let dodgeCount = 0;
@@ -431,8 +506,10 @@
     countdown.textContent = "\u23f3 Manca poco: " + tail + ".";
   }
 
-  updateCountdown();
-  setInterval(updateCountdown, 30000);
+  if (!alwaysOpen) {
+    updateCountdown();
+    countdownTimer = setInterval(updateCountdown, 30000);
+  }
 
   /* ---------------- Confetti / hearts burst ---------------- */
 
