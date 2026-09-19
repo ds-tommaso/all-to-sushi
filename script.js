@@ -49,8 +49,11 @@
   const D = CONFIG.dinner || { year: 2026, month: 9, day: 19, hour: 21, minute: 0 };
 
   const DINNER_AT = new Date(D.year, D.month - 1, D.day, D.hour, D.minute, 0);
-  const THANKS_AT = new Date(D.year, D.month - 1, D.day, 12, 0, 0);
-  const ALWAYS_OPEN_AT = new Date(D.year, D.month - 1, D.day + 1, 0, 0, 0);
+
+  /* Under 6 ore all'evento: solo SÌ. Evento passato: l'invito diventa una
+     proposta aperta (nessuna data fissa, si sceglie insieme). */
+  const THANKS_AT = new Date(DINNER_AT.getTime() - 6 * 60 * 60 * 1000);
+  const ALWAYS_OPEN_AT = DINNER_AT;
 
   const WEEKDAYS = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"];
   const DAY_NAME = WEEKDAYS[DINNER_AT.getDay()];
@@ -97,9 +100,9 @@
   mapLink.href = CONFIG.mapsUrl || "#";
   if (CONFIG.siteUrl) siteLink.href = CONFIG.siteUrl;
 
-  /* ---------------- Always open: after the dinner date ---------------- */
+  /* ---------------- Always open: once the dinner time itself has passed ---------------- */
 
-  /* Once that Saturday is behind us the invitation stops being about one
+  /* Once that moment is behind us the invitation stops being about one
      evening: there is always room for sushi. Nothing is fixed any more — not
      the hour, not the place — so there is nothing left to answer with a
      button: the SI and the NO go, and the WhatsApp number becomes the way to
@@ -130,7 +133,7 @@
     inviteQuestion.textContent = "Quando ci andiamo?";
 
     /* No date to say yes to, so no SI and no NO. The NO is already gone on
-       its own by now: THANKS_AT falls earlier the same day. */
+       its own by now: THANKS_AT falls 6 hours earlier. */
     actions.hidden = true;
     noBtn.hidden = true;
     noBtn.classList.remove("is-ready");
@@ -276,8 +279,8 @@
     "Il NO non esiste qui 💍", "Solo il SÌ è un'opzione ❤️"
   ];
 
-  /* After this moment the NO button retires: only the yes is left, plus a
-     thank-you. Local time of the device, so 12:00 as she reads it. */
+  /* From THANKS_AT onward (6 hours before dinner) the NO button retires:
+     only the yes is left, plus a thank-you. */
   const THANKS_HEADING = "Grazie. Davvero. \u2764\ufe0f\ud83c\udf63";
 
   let msgIndex = 0;
@@ -346,11 +349,15 @@
     let best = null;
     let bestScore = -1;
 
-    for (let i = 0; i < 10; i++) {
+    const isFree = (x, y) => {
+      const candidate = { left: x, top: y, right: x + w, bottom: y + h };
+      return !blocked.some((rect) => rectsOverlap(candidate, rect, 16));
+    };
+
+    for (let i = 0; i < 40; i++) {
       const x = bounds.minX + Math.random() * (bounds.maxX - bounds.minX);
       const y = bounds.minY + Math.random() * (bounds.maxY - bounds.minY);
-      const candidate = { left: x, top: y, right: x + w, bottom: y + h };
-      if (blocked.some((rect) => rectsOverlap(candidate, rect, 16))) continue;
+      if (!isFree(x, y)) continue;
 
       let score = Math.random();
       if (avoidPoint) {
@@ -362,6 +369,19 @@
         bestScore = score;
         best = { x, y };
       }
+    }
+
+    if (!best) {
+      /* Random sampling found nothing free (very tight viewport): the four
+         corners are the spots farthest from anything centred, so try those
+         before ever letting the button land on the SI or WhatsApp link. */
+      const corners = [
+        { x: bounds.minX, y: bounds.minY },
+        { x: bounds.maxX, y: bounds.minY },
+        { x: bounds.minX, y: bounds.maxY },
+        { x: bounds.maxX, y: bounds.maxY }
+      ];
+      best = corners.find((c) => isFree(c.x, c.y)) || null;
     }
 
     if (!best) {
@@ -389,14 +409,30 @@
     noBtn.textContent = NO_MESSAGES[msgIndex];
 
     const pos = pickNewPosition(avoidPoint);
-    noBtn.style.left = pos.x + "px";
-    noBtn.style.top = pos.y + "px";
+    relocateNoButton(pos.x, pos.y);
 
     dodgeCount++;
 
     noBtn.classList.remove("is-wiggling");
     void noBtn.offsetWidth;
     noBtn.classList.add("is-wiggling");
+  }
+
+  let pointerEventsTimer = null;
+
+  /* The button slides to its new spot over ~0.32s and can pass right over
+     the SI or WhatsApp buttons on the way. Its destination is always clear
+     of them (pickNewPosition), but a click landing mid-flight would still
+     hit whatever it happens to be crossing — so it stops accepting clicks
+     for the whole trip and only re-arms once it has actually arrived. */
+  function relocateNoButton(x, y) {
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+    noBtn.style.pointerEvents = "none";
+    clearTimeout(pointerEventsTimer);
+    pointerEventsTimer = setTimeout(() => {
+      if (!answered && !noRetired) noBtn.style.pointerEvents = "";
+    }, 340);
   }
 
   function placeInitial() {
@@ -532,8 +568,18 @@
     const bounds = getBounds();
     const curLeft = parseFloat(noBtn.style.left) || 0;
     const curTop = parseFloat(noBtn.style.top) || 0;
-    noBtn.style.left = clamp(curLeft, bounds.minX, bounds.maxX) + "px";
-    noBtn.style.top = clamp(curTop, bounds.minY, bounds.maxY) + "px";
+    let left = clamp(curLeft, bounds.minX, bounds.maxX);
+    let top = clamp(curTop, bounds.minY, bounds.maxY);
+
+    /* A resize/orientation change can leave the clamped spot sitting on top
+       of the SI or WhatsApp button: jump away rather than stay stuck there. */
+    const rect = { left, top, right: left + noBtn.offsetWidth, bottom: top + noBtn.offsetHeight };
+    if (keepClearOf().some((r) => rectsOverlap(rect, r, 16))) {
+      const pos = pickNewPosition();
+      left = pos.x;
+      top = pos.y;
+    }
+    relocateNoButton(left, top);
   }
 
   window.addEventListener("resize", keepInView);
